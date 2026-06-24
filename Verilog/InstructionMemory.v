@@ -13,7 +13,7 @@ module InstructionMemory (
         for (i = 0; i < 1024; i = i + 1) begin
             insts[i] = 32'b0;
         end
-        $readmemb("TEST_INSTRUCTIONS.txt", insts);
+        $readmemb("MachineCode.txt", insts);
     end
 
 endmodule

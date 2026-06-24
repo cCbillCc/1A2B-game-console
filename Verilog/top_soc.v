@@ -32,7 +32,7 @@ module top_soc (
         .mem_readData(cpu_rdata)
     );
 
-    wire sel_mem  = (cpu_addr < 32'h40000000);  
+    wire sel_mem  = (cpu_addr < 32'h1000);  
     wire sel_btn  = (cpu_addr == 32'h40000000); 
     wire sel_seg7 = (cpu_addr == 32'h40000004); 
     wire sel_sw   = (cpu_addr == 32'h4000000C); 

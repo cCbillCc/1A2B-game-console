@@ -8,7 +8,7 @@ _start:
     li s3, 0x4000000C
 
     li t5, 0xACE1
-    li t0, 0x0FFFF
+    li t0, 0xF1A2B
     sw t0, 0(s1)
 
 seed_loop:
@@ -55,6 +55,7 @@ gen_d3:
     li s10, 0
     li s11, 0
     li a0, 0
+    li sp, 0X1000
 
     j main_loop
 
@@ -72,14 +73,14 @@ nr_skip:
 
 main_loop:
     lw t1, 0(s3)
-    andi t1, t1, 3
+    li t2, 15
+    beq t1, t2, mode_11
     
+    andi t1, t1, 3
     li t2, 1
     beq t1, t2, mode_01
     li t2, 2
     beq t1, t2, mode_10
-    li t2, 3
-    beq t1, t2, mode_11
     
 mode_00:
     slli t0, s0, 12
@@ -276,6 +277,11 @@ res_calc:
     
     li t2, 4
     beq a1, t2, win_pause
+    
+    addi sp, sp, -8
+    sw s10, 4(sp)
+    sw s11, 0(sp)
+    
     j show_result
 
 wait_release:
@@ -313,15 +319,64 @@ mode_01:
     j main_loop
 
 mode_10:
-    addi a0, a0, 1
-    li t1, 0x20000
-    and t2, a0, t1
-    beq t2, x0, show_res
+    li t3, 0
+    add a7, sp, x0
+    sw t3, 0(s1)
+mode_10_loop:
+    lw t1, 0(s3)
+    andi t1, t1, 3
+    li t2, 2
+    bne t1, t2, back_main_loop
+    
+    li t2, 0x1000
+    beq sp, t2, mode_10_loop
+    
+    beq t3, x0, show_gue
+    lw t0, 0(sp)
+    sw t0, 0(s1)
+    j flag
+    
 show_gue:
-    sw s10, 0(s1)
-    j main_loop
-show_res:
-    sw s11, 0(s1)
+    lw t0, 4(sp)
+    sw t0, 0(s1)
+    
+flag:
+    lw t1, 0(s2)
+    li t2, 1
+    beq t1, t2, last
+    li t2, 8
+    beq t1, t2, next
+    li t2, 16
+    beq t1, t2, change
+    j mode_10_loop
+    
+last:
+    li t2, 0xFF8
+    beq sp, t2, wait_m10_release
+    addi sp, sp, 8
+    li t3, 0
+    j wait_m10_release
+    
+next:
+    beq sp, a7, wait_m10_release
+    addi sp, sp, -8
+    li t3, 0
+    j wait_m10_release
+
+change:
+    beq t3, x0, change_1
+    li t3, 0
+    j wait_m10_release
+change_1:
+    li t3, 1
+    
+wait_m10_release:
+    lw t1, 0(s2)
+    bne t1, x0, wait_m10_release
+    j mode_10_loop
+    
+back_main_loop:
+    add sp, a7, x0
     j main_loop
 
 mode_11:

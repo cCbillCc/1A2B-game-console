@@ -37,7 +37,6 @@ wire [31:0] reg_writeData;
 wire BrEq;
 wire BrLT;
 wire [31:0] imm;
-wire [31:0] imm_shifted;
 wire [31:0] adder2_out;
 
 wire [31:0] alu_operand_b;
@@ -118,11 +117,6 @@ BranchComp m_BranchComp(
 ImmGen m_ImmGen(
     .inst(inst),
     .imm(imm)
-);
-
-ShiftLeftOne m_ShiftLeftOne(
-    .i(imm),
-    .o(imm_shifted)
 );
 
 Adder m_Adder_2(
