@@ -36,14 +36,20 @@
 
 #### 程式修改
 將修改好的RISC-V組合語言轉成機器語言，並以一行指令一行的格式(一行32位元)儲存進MachineCode.txt。
+
 #### bitstream產生
 建立Vivado專案，將所有Verilog與xdc匯入，將MachineCode.txt移至InstructionMemory.v相同目錄內，依序進行Synthesis->Implementation->Bitstream Generation。
+
 #### 燒錄到FPGA開發板
 電腦連接Basys3開發板，開啟Vivado的Hardware Manager，將Bitstream Generation產生的top_soc.bit檔Program Device進Basys3開發板中。
+
 #### 操作說明
 最左邊的開關(sw15)是機器開關，打開會進入遊戲畫面，按下中鍵開始遊戲，使用左右鍵切換編輯目標，上下鍵編輯，中鍵送出猜測。
+
 最右邊的開關(sw0)打開能顯示猜測次數。
+
 右邊第二個開關(sw1)打開能進入歷史查詢模式，按上/下鍵可自由翻閱歷史猜測的紀錄。在任意歷史紀錄畫面上按下中鍵，即可即時切換顯示該次猜測的「幾A幾B判定結果」。
+
 注：同時打開sw0和sw1時不會進入二者。
 
 同時打開最右邊四個開關(sw0~3)會進入除錯模式，直接顯示謎底。
